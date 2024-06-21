@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class mainMediaVIew:ViewModel() {
-
+    var dueText:Int = 0
     var playerText = MutableLiveData<Int>()
     var count:Int = 0
     var songName = MutableLiveData<String>()
