@@ -9,6 +9,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
+import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
@@ -16,6 +17,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.sk.basicmusic.songs.song
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,6 +38,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var playerText:TextView
     private lateinit var dueText:TextView
+    private lateinit var albumCover: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +57,7 @@ class MainActivity : AppCompatActivity() {
         val next  = findViewById<FloatingActionButton>(R.id.fabForward)
         val back  = findViewById<FloatingActionButton>(R.id.fabBack)
         val repeat = findViewById<FloatingActionButton>(R.id.fabRepeat)
+        albumCover = findViewById(R.id.ivAlbum)
 
         playerText = findViewById<TextView>(R.id.tvPlayer)
         mediaView.playerText.observe(this,{playerText.text = it.toString()})
@@ -70,10 +74,11 @@ class MainActivity : AppCompatActivity() {
             play.visibility = INVISIBLE
             pause.visibility = VISIBLE
             if (mediaView.mediaplayer == null) {
-                var st:String = resources.getResourceName(songs.song[mediaView.count])
+                var st:String = resources.getResourceName(songs.song[mediaView.count].first)
                 mediaView.songName.value = st.split("/")[1]
+                albumCover.setImageResource(song[mediaView.count].second)
                 Logmsg(mediaView.songName.value.toString())
-                mediaView.mediaplayer = MediaPlayer.create(this, songs.song[mediaView.count])
+                mediaView.mediaplayer = MediaPlayer.create(this, songs.song[mediaView.count].first)
                 intializeSeekbar()
             }
             mediaView.mediaplayer?.start()
@@ -108,13 +113,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun intializeSeekbar()
     {
+        var seek = 0
         seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if(fromUser)
-                {
-                    mediaView.mediaplayer?.seekTo(progress)
-                }
-
+                if (fromUser) {seek = progress*1000}
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -122,7 +124,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
+                mediaView.mediaplayer!!.seekTo(seek)
             }
 
         })
@@ -137,7 +139,16 @@ class MainActivity : AppCompatActivity() {
             }
             else
             {
-                mediaView.playerText.value = (mediaView.mediaplayer!!.currentPosition/1000).toString().toInt()
+                if(seekbar.progress == seekbar.max)
+                {
+                    mediaView.dueText.value = 0
+                    nextMeida()
+                }
+                else
+                {
+
+                    mediaView.playerText.value = (mediaView.mediaplayer!!.currentPosition/1000).toString().toInt()
+                }
             }
 
         handler.postDelayed(runnable,1000)
@@ -160,10 +171,11 @@ class MainActivity : AppCompatActivity() {
 
         Logmsg("Memory Released")
         if (mediaView.mediaplayer == null) {
-            var st:String = resources.getResourceName(songs.song[mediaView.count])
+            var st:String = resources.getResourceName(songs.song[mediaView.count].first)
             mediaView.songName.value = st.split("/")[1]
+            albumCover.setImageResource(song[mediaView.count].second)
             Logmsg(mediaView.songName.value.toString())
-            mediaView.mediaplayer = MediaPlayer.create(this, songs.song[mediaView.count])
+            mediaView.mediaplayer = MediaPlayer.create(this, songs.song[mediaView.count].first)
             intializeSeekbar()
         }
         mediaView.mediaplayer?.start()
@@ -180,10 +192,10 @@ class MainActivity : AppCompatActivity() {
         mediaView.mediaplayer?.release()
         mediaView.mediaplayer = null
         handler.removeCallbacks(runnable)
-//        seekbar.progress = 0
-//        mediaView.songName.value = ""
-//        mediaView.playerText.value = 0
-//        mediaView.dueText.value = 0
+        seekbar.progress = 0
+        mediaView.songName.value = ""
+        mediaView.playerText.value = 0
+        mediaView.dueText.value = 0
 recreate()
     }
     private fun pauseMedia()

@@ -10,20 +10,21 @@
     tools:context=".MainActivity">
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="155dp"
-        android:layout_height="136dp"
+        android:id="@+id/ivAlbum"
+        android:layout_width="233dp"
+        android:layout_height="211dp"
+        android:contentDescription="MusicImage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.271"
-        app:srcCompat="@drawable/dap"
-        android:contentDescription="MusicImage"/>
+        app:layout_constraintVertical_bias="0.171"
+        app:srcCompat="@drawable/dap" />
 
     <SeekBar
         android:id="@+id/sbDap"
-        android:layout_width="0dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
