@@ -156,7 +156,7 @@ class MainActivity : AppCompatActivity() {
     handler.postDelayed(runnable,1000)
 
 }
-
+//
     private fun player(counter: Int)
     {
         play.visibility = INVISIBLE
