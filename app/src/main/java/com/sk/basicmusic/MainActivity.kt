@@ -15,9 +15,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sk.basicmusic.songs.song
+import org.w3c.dom.Text
+import kotlin.reflect.typeOf
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,7 +37,6 @@ class MainActivity : AppCompatActivity() {
     private var rIndicator:Boolean = false
 
     private lateinit var seekbar: SeekBar
-    var mediaPlayer: MediaPlayer? = null
 
     private lateinit var playerText:TextView
     private lateinit var dueText:TextView
@@ -57,6 +59,7 @@ class MainActivity : AppCompatActivity() {
         val next  = findViewById<FloatingActionButton>(R.id.fabForward)
         val back  = findViewById<FloatingActionButton>(R.id.fabBack)
         val repeat = findViewById<FloatingActionButton>(R.id.fabRepeat)
+        val repeatText = findViewById<TextView>(R.id.repeatText)
         albumCover = findViewById(R.id.ivAlbum)
 
         playerText = findViewById<TextView>(R.id.tvPlayer)
@@ -107,6 +110,28 @@ class MainActivity : AppCompatActivity() {
             Logmsg("Stopped")
             handler.removeCallbacks(runnable)
             stop()
+        }
+
+        repeat.setOnClickListener()
+        {
+            if (rIndicator == false)
+            {
+                rIndicator = true
+                repeatText.text = "On"
+                Logmsg("Repeat On")
+            }
+            else
+            {
+                rIndicator = false
+                repeatText.text = "Off"
+                Logmsg("Repeat Off")
+            }
+        }
+
+        val about = findViewById<ImageView>(R.id.aboutBtn)
+        about.setOnClickListener()
+        {
+            startActivity(Intent(this,about::class.java))
         }
 
     }
@@ -174,6 +199,7 @@ class MainActivity : AppCompatActivity() {
             var st:String = resources.getResourceName(songs.song[mediaView.count].first)
             mediaView.songName.value = st.split("/")[1]
             albumCover.setImageResource(song[mediaView.count].second)
+
             Logmsg(mediaView.songName.value.toString())
             mediaView.mediaplayer = MediaPlayer.create(this, songs.song[mediaView.count].first)
             intializeSeekbar()
@@ -196,7 +222,7 @@ class MainActivity : AppCompatActivity() {
         mediaView.songName.value = ""
         mediaView.playerText.value = 0
         mediaView.dueText.value = 0
-recreate()
+        recreate()
     }
     private fun pauseMedia()
     {
@@ -208,7 +234,8 @@ recreate()
 
     private fun nextMeida()
     {
-        mediaView.countUp()
+        if (rIndicator != true) mediaView.countUp()
+
         if(mediaView.count >= songs.songCount)
         {
             mediaView.count = 0
@@ -250,9 +277,9 @@ recreate()
         {
             play.visibility = INVISIBLE
             pause.visibility = VISIBLE
-
             intializeSeekbar()
             handler.removeCallbacks(runnable)
+            albumCover.setImageResource(song[mediaView.count].second)
         }
     }
 }
