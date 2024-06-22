@@ -15,7 +15,7 @@
         android:theme="@style/Theme.BasicMusic"
         tools:targetApi="31">
         <activity
-            android:name=".about"
+            android:name=".about_page"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
