@@ -17,6 +17,7 @@ class mainMediaVIew:ViewModel() {
 
     var mediaplayer: MediaPlayer? = null
 
+
     init {
         playerText.value = 0
         dueText.value = 0

@@ -1,5 +1,6 @@
 package com.sk.basicmusic
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var play: FloatingActionButton
     private lateinit var pause: FloatingActionButton
+    private lateinit var stop: FloatingActionButton
     private var rIndicator:Boolean = false
 
     private lateinit var seekbar: SeekBar
@@ -48,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         seekbar = findViewById(R.id.sbDap)
         play  = findViewById<FloatingActionButton>(R.id.fabPlay)
         pause = findViewById<FloatingActionButton>(R.id.fabPause)
-        val stop  = findViewById<FloatingActionButton>(R.id.fabStop)
+        stop  = findViewById<FloatingActionButton>(R.id.fabStop)
         val next  = findViewById<FloatingActionButton>(R.id.fabForward)
         val back  = findViewById<FloatingActionButton>(R.id.fabBack)
         val repeat = findViewById<FloatingActionButton>(R.id.fabRepeat)
@@ -98,6 +100,7 @@ class MainActivity : AppCompatActivity() {
         stop.setOnClickListener()
         {
             Logmsg("Stopped")
+            handler.removeCallbacks(runnable)
             stop()
         }
 
@@ -128,8 +131,14 @@ class MainActivity : AppCompatActivity() {
         mediaView.dueText.observe(this,{seekbar.max = it})
 
         runnable = Runnable {
-
-            mediaView.playerText.value = (mediaView.mediaplayer!!.currentPosition/1000).toString().toInt()
+            if (mediaView.mediaplayer == null)
+            {
+                mediaView.playerText.value = 0
+            }
+            else
+            {
+                mediaView.playerText.value = (mediaView.mediaplayer!!.currentPosition/1000).toString().toInt()
+            }
 
         handler.postDelayed(runnable,1000)
     }
@@ -146,9 +155,7 @@ class MainActivity : AppCompatActivity() {
         mediaView.mediaplayer?.reset()
         mediaView.mediaplayer?.release()
         mediaView.mediaplayer = null
-        Logmsg("till media = null")
         handler.removeCallbacks(runnable)
-        Logmsg("passed media")
         seekbar.progress = 0
 
         Logmsg("Memory Released")
@@ -166,16 +173,18 @@ class MainActivity : AppCompatActivity() {
     private fun  stop()
     {
         Logmsg("Stop")
-        play.visibility = VISIBLE
-        pause.visibility = INVISIBLE
-
+//        play.visibility = VISIBLE
+//        pause.visibility = INVISIBLE
         mediaView.mediaplayer?.stop()
         mediaView.mediaplayer?.reset()
         mediaView.mediaplayer?.release()
         mediaView.mediaplayer = null
         handler.removeCallbacks(runnable)
-        seekbar.progress = 0
-        mediaView.songName.value = ""
+//        seekbar.progress = 0
+//        mediaView.songName.value = ""
+//        mediaView.playerText.value = 0
+//        mediaView.dueText.value = 0
+recreate()
     }
     private fun pauseMedia()
     {
@@ -229,7 +238,9 @@ class MainActivity : AppCompatActivity() {
         {
             play.visibility = INVISIBLE
             pause.visibility = VISIBLE
+
             intializeSeekbar()
+            handler.removeCallbacks(runnable)
         }
     }
 }
