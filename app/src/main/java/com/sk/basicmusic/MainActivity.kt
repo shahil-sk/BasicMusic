@@ -9,15 +9,12 @@ import android.util.Log
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.SeekBar
-import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.sk.basicmusic.songs
-import kotlinx.coroutines.handleCoroutineException
-import org.w3c.dom.Text
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,9 +30,10 @@ class MainActivity : AppCompatActivity() {
     private var rIndicator:Boolean = false
 
     private lateinit var seekbar: SeekBar
-    private var mediaPlayer: MediaPlayer? = null
+    var mediaPlayer: MediaPlayer? = null
 
     private lateinit var playerText:TextView
+    private lateinit var dueText:TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +56,9 @@ class MainActivity : AppCompatActivity() {
         playerText = findViewById<TextView>(R.id.tvPlayer)
         mediaView.playerText.observe(this,{playerText.text = it.toString()})
 
+        dueText = findViewById<TextView>(R.id.tvDue)
+        mediaView.dueText.observe(this,{dueText.text = it.toString()})
+
         var songTitle = findViewById<TextView>(R.id.songName)
         mediaView.songName.observe(this,{songTitle.text = it})
 
@@ -66,14 +67,15 @@ class MainActivity : AppCompatActivity() {
             Logmsg("Play")
             play.visibility = INVISIBLE
             pause.visibility = VISIBLE
-            if (mediaPlayer == null) {
+            if (mediaView.mediaplayer == null) {
                 var st:String = resources.getResourceName(songs.song[mediaView.count])
                 mediaView.songName.value = st.split("/")[1]
                 Logmsg(mediaView.songName.value.toString())
-                mediaPlayer = MediaPlayer.create(this, songs.song[mediaView.count])
+                mediaView.mediaplayer = MediaPlayer.create(this, songs.song[mediaView.count])
                 intializeSeekbar()
             }
-            mediaPlayer?.start()
+            mediaView.mediaplayer?.start()
+            mediaView.dueText.value = mediaView.mediaplayer!!.duration/1000
         }
 
         pause.setOnClickListener()
@@ -95,6 +97,7 @@ class MainActivity : AppCompatActivity() {
 
         stop.setOnClickListener()
         {
+            Logmsg("Stopped")
             stop()
         }
 
@@ -106,8 +109,7 @@ class MainActivity : AppCompatActivity() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if(fromUser)
                 {
-                    mediaPlayer?.seekTo(progress)
-                    Logmsg("User Seeked To: ${seekbar.progress/1000}")
+                    mediaView.mediaplayer?.seekTo(progress)
                 }
 
             }
@@ -121,26 +123,18 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-        var due = findViewById<TextView>(R.id.tvDue)
-        seekbar.max = mediaPlayer!!.duration
-        due.text = (seekbar.max/1000).toString()
+        //seekbar components
+        mediaView.playerText.observe(this,{seekbar.progress = it})
+        mediaView.dueText.observe(this,{seekbar.max = it})
 
         runnable = Runnable {
 
-            if(seekbar.progress == mediaPlayer!!.duration)
-            {
-                nextMeida()
-            }
-            else
-            {
-                mediaView.playerText.value = (mediaPlayer!!.currentPosition/1000).toString().toInt()
-                seekbar.progress = mediaPlayer!!.currentPosition
-            }
-
+            mediaView.playerText.value = (mediaView.mediaplayer!!.currentPosition/1000).toString().toInt()
 
         handler.postDelayed(runnable,1000)
     }
     handler.postDelayed(runnable,1000)
+
 }
 
     private fun player(counter: Int)
@@ -148,22 +142,25 @@ class MainActivity : AppCompatActivity() {
         play.visibility = INVISIBLE
         pause.visibility = VISIBLE
         Log.i("media", "in player function")
-        mediaPlayer?.stop()
-        mediaPlayer?.reset()
-        mediaPlayer?.release()
-        mediaPlayer = null
+        mediaView.mediaplayer?.stop()
+        mediaView.mediaplayer?.reset()
+        mediaView.mediaplayer?.release()
+        mediaView.mediaplayer = null
+        Logmsg("till media = null")
         handler.removeCallbacks(runnable)
+        Logmsg("passed media")
         seekbar.progress = 0
 
         Logmsg("Memory Released")
-        if (mediaPlayer == null) {
+        if (mediaView.mediaplayer == null) {
             var st:String = resources.getResourceName(songs.song[mediaView.count])
             mediaView.songName.value = st.split("/")[1]
             Logmsg(mediaView.songName.value.toString())
-            mediaPlayer = MediaPlayer.create(this, songs.song[mediaView.count])
+            mediaView.mediaplayer = MediaPlayer.create(this, songs.song[mediaView.count])
             intializeSeekbar()
         }
-        mediaPlayer?.start()
+        mediaView.mediaplayer?.start()
+        mediaView.dueText.value = mediaView.mediaplayer!!.duration/1000
     }
 
     private fun  stop()
@@ -172,10 +169,10 @@ class MainActivity : AppCompatActivity() {
         play.visibility = VISIBLE
         pause.visibility = INVISIBLE
 
-        mediaPlayer?.stop()
-        mediaPlayer?.reset()
-        mediaPlayer?.release()
-        mediaPlayer = null
+        mediaView.mediaplayer?.stop()
+        mediaView.mediaplayer?.reset()
+        mediaView.mediaplayer?.release()
+        mediaView.mediaplayer = null
         handler.removeCallbacks(runnable)
         seekbar.progress = 0
         mediaView.songName.value = ""
@@ -185,12 +182,12 @@ class MainActivity : AppCompatActivity() {
         play.visibility = VISIBLE
         pause.visibility = INVISIBLE
         Logmsg("Paused")
-        mediaPlayer?.pause()
+        mediaView.mediaplayer?.pause()
     }
 
     private fun nextMeida()
     {
-        mediaView.count++
+        mediaView.countUp()
         if(mediaView.count >= songs.songCount)
         {
             mediaView.count = 0
@@ -204,7 +201,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun backMeida()
     {
-        mediaView.count--
+        mediaView.countDown()
         if(mediaView.count == -1)
         {
             mediaView.count = songs.songCount - 1
@@ -219,5 +216,20 @@ class MainActivity : AppCompatActivity() {
     fun Logmsg(msg:String)
     {
         Log.i("media",msg)
+    }
+
+    fun showToast(msg: String)
+    {
+        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(mediaView.mediaplayer != null)
+        {
+            play.visibility = INVISIBLE
+            pause.visibility = VISIBLE
+            intializeSeekbar()
+        }
     }
 }

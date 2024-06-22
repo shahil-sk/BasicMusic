@@ -3,10 +3,9 @@ package com.sk.basicmusic
 object songs {
 
     val song = arrayOf(
-        R.raw.bad_intention,
-        R.raw.dap,
         R.raw.ackrite,
-        R.raw.alkaholik
+        R.raw.alkaholik,
+        R.raw.bad_intention
     )
 
     val songCount = song.size
