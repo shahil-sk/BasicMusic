@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
         val about = findViewById<ImageView>(R.id.aboutBtn)
         about.setOnClickListener()
         {
-            startActivity(Intent(this,about::class.java))
+            startActivity(Intent(this@MainActivity,about_page::class.java))
         }
 
     }

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/Lavender"
-    tools:context=".about">
+    tools:context=".about_page">
 
     <androidx.cardview.widget.CardView
         android:layout_width="300dp"
