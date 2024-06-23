@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var play: FloatingActionButton
     private lateinit var pause: FloatingActionButton
     private lateinit var stop: FloatingActionButton
-    private var rIndicator:Boolean = false
 
     private lateinit var seekbar: SeekBar
 
@@ -119,15 +118,15 @@ class MainActivity : AppCompatActivity() {
 
         repeat.setOnClickListener()
         {
-            if (rIndicator == false)
+            if (mediaView.rIndicator == false)
             {
-                rIndicator = true
+                mediaView.rIndicator = true
                 repeatText.text = "On"
                 Logmsg("Repeat On")
             }
             else
             {
-                rIndicator = false
+                mediaView.rIndicator = false
                 repeatText.text = "Off"
                 Logmsg("Repeat Off")
             }
@@ -173,6 +172,7 @@ class MainActivity : AppCompatActivity() {
                 {
                     mediaView.playerText.value = 0
                     mediaView.dueText.value = 0
+                    seekbar.progress = 0
                     nextMeida()
                 }
                 else
@@ -248,7 +248,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun nextMeida()
     {
-        if (rIndicator != true) mediaView.countUp()
+        if (mediaView.rIndicator != true) mediaView.countUp()
 
         if(mediaView.count >= songs.songCount)
         {

@@ -19,6 +19,7 @@ class mainMediaVIew:ViewModel() {
     var songName = MutableLiveData<String>()
     var min = MutableLiveData<String>()
     var max = MutableLiveData<String>()
+    var rIndicator:Boolean = false
 
     var mediaplayer: MediaPlayer? = null
 
