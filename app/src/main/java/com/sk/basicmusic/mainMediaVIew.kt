@@ -17,6 +17,8 @@ class mainMediaVIew:ViewModel() {
     var playerText = MutableLiveData<Int>()
     var count:Int = 0
     var songName = MutableLiveData<String>()
+    var min = MutableLiveData<String>()
+    var max = MutableLiveData<String>()
 
     var mediaplayer: MediaPlayer? = null
 
@@ -25,6 +27,8 @@ class mainMediaVIew:ViewModel() {
         playerText.value = 0
         dueText.value = 0
         songName.value = ""
+        min.value = ""
+        max.value = ""
     }
 
     fun countUp()

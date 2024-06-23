@@ -23,9 +23,11 @@
         android:id="@+id/tvPlayer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/Black"
+        android:text="0 : 0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.045"
+        app:layout_constraintHorizontal_bias="0.109"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.453" />
@@ -34,9 +36,11 @@
         android:id="@+id/tvDue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/Black"
+        android:text="0 : 0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.954"
+        app:layout_constraintHorizontal_bias="0.871"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.453" />
@@ -146,6 +150,7 @@
         android:id="@+id/songName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/Black"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -183,8 +188,7 @@
                 app:layout_constraintHorizontal_bias="0.529"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.526"
-                app:srcCompat="@drawable/dap" />
+                app:layout_constraintVertical_bias="0.526" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
@@ -193,7 +197,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/Lavender"
-        android:tint="@color/LightBlue"
+        app:tint="@color/LightBlue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.946"

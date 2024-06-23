@@ -63,10 +63,10 @@ class MainActivity : AppCompatActivity() {
         albumCover = findViewById(R.id.ivAlbum)
 
         playerText = findViewById<TextView>(R.id.tvPlayer)
-        mediaView.playerText.observe(this,{playerText.text = it.toString()})
+        mediaView.min.observe(this,{playerText.text = it.toString()})
 
         dueText = findViewById<TextView>(R.id.tvDue)
-        mediaView.dueText.observe(this,{dueText.text = it.toString()})
+        mediaView.max.observe(this,{dueText.text = it.toString()})
 
         var songTitle = findViewById<TextView>(R.id.songName)
         mediaView.songName.observe(this,{songTitle.text = it})
@@ -86,6 +86,11 @@ class MainActivity : AppCompatActivity() {
             }
             mediaView.mediaplayer?.start()
             mediaView.dueText.value = mediaView.mediaplayer!!.duration/1000
+            var total_seconds:Int = (mediaView.dueText.value).toString().toInt()
+            var minutes = (total_seconds / 60)
+            var seconds = (total_seconds % 60)
+            mediaView.max.value = "$minutes : $seconds"
+
         }
 
         pause.setOnClickListener()
@@ -166,6 +171,7 @@ class MainActivity : AppCompatActivity() {
             {
                 if(seekbar.progress == seekbar.max)
                 {
+                    mediaView.playerText.value = 0
                     mediaView.dueText.value = 0
                     nextMeida()
                 }
@@ -173,6 +179,10 @@ class MainActivity : AppCompatActivity() {
                 {
 
                     mediaView.playerText.value = (mediaView.mediaplayer!!.currentPosition/1000).toString().toInt()
+                    var total_seconds:Int = (mediaView.playerText.value).toString().toInt()
+                    var minutes = (total_seconds / 60)
+                    var seconds = (total_seconds % 60)
+                    mediaView.min.value = "$minutes : $seconds"
                 }
             }
 
@@ -206,6 +216,10 @@ class MainActivity : AppCompatActivity() {
         }
         mediaView.mediaplayer?.start()
         mediaView.dueText.value = mediaView.mediaplayer!!.duration/1000
+        var total_seconds:Int = (mediaView.dueText.value).toString().toInt()
+        var minutes = (total_seconds / 60)
+        var seconds = (total_seconds % 60)
+        mediaView.max.value = "$minutes : $seconds"
     }
 
     private fun  stop()
