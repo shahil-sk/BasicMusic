@@ -20,6 +20,7 @@ class mainMediaVIew:ViewModel() {
     var min = MutableLiveData<String>()
     var max = MutableLiveData<String>()
     var rIndicator:Boolean = false
+    var rText = MutableLiveData<String>()
 
     var mediaplayer: MediaPlayer? = null
 
@@ -30,6 +31,7 @@ class mainMediaVIew:ViewModel() {
         songName.value = ""
         min.value = ""
         max.value = ""
+        rText.value = "Off"
     }
 
     fun countUp()

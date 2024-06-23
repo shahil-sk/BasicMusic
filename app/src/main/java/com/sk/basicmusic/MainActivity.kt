@@ -70,6 +70,8 @@ class MainActivity : AppCompatActivity() {
         var songTitle = findViewById<TextView>(R.id.songName)
         mediaView.songName.observe(this,{songTitle.text = it})
 
+        mediaView.rText.observe(this,{repeatText.text = it})
+
         play.setOnClickListener()
         {
             Logmsg("Play")
@@ -87,7 +89,7 @@ class MainActivity : AppCompatActivity() {
             mediaView.dueText.value = mediaView.mediaplayer!!.duration/1000
             var total_seconds:Int = (mediaView.dueText.value).toString().toInt()
             var minutes = (total_seconds / 60)
-            var seconds = (total_seconds % 60)
+            var seconds = (total_seconds % 60) - 1
             mediaView.max.value = "$minutes : $seconds"
 
         }
@@ -121,13 +123,13 @@ class MainActivity : AppCompatActivity() {
             if (mediaView.rIndicator == false)
             {
                 mediaView.rIndicator = true
-                repeatText.text = "On"
+                mediaView.rText.value = "On"
                 Logmsg("Repeat On")
             }
             else
             {
                 mediaView.rIndicator = false
-                repeatText.text = "Off"
+                mediaView.rText.value = "Off"
                 Logmsg("Repeat Off")
             }
         }
