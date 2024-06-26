@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
+
         mediaView = ViewModelProvider(this).get(mainMediaVIew::class.java)
         sp = getSharedPreferences("USER", MODE_PRIVATE)
         editor = sp.edit()
@@ -289,8 +290,18 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this,msg,Toast.LENGTH_SHORT).show()
     }
 
+    override fun onPause() {
+        super.onPause()
+         editor.apply()
+         {
+             putInt("count",mediaView.count)
+             commit()
+         }
+    }
     override fun onResume() {
         super.onResume()
+        mediaView.count = sp.getInt("count",0)
+
         if(mediaView.mediaplayer != null)
         {
             play.visibility = INVISIBLE
