@@ -27,11 +27,10 @@
 
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/tvInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:lineSpacingExtra="2dp"
-                android:text="This is made to under the most basic workings of the android-studio like (MediaPlayer API's, MutableLiveData, ViewModel, Runnables, Handlers etc) Main purpose of this project is to develop my skills as beginner in android Development"
                 android:textAlignment="center"
                 android:textColor="@color/Black"
                 app:layout_constraintBottom_toBottomOf="parent"

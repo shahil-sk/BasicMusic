@@ -147,7 +147,8 @@ class MainActivity : AppCompatActivity() {
         var seek = 0
         seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {seek = progress*1000}
+                if (fromUser) {seek = progress*1000
+                    mediaView.mediaplayer!!.seekTo(seek)}
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -155,7 +156,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                mediaView.mediaplayer!!.seekTo(seek)
+
             }
 
         })
@@ -227,8 +228,8 @@ class MainActivity : AppCompatActivity() {
     private fun  stop()
     {
         Logmsg("Stop")
-//        play.visibility = VISIBLE
-//        pause.visibility = INVISIBLE
+        play.visibility = VISIBLE
+        pause.visibility = INVISIBLE
         mediaView.mediaplayer?.stop()
         mediaView.mediaplayer?.reset()
         mediaView.mediaplayer?.release()
@@ -238,7 +239,8 @@ class MainActivity : AppCompatActivity() {
         mediaView.songName.value = ""
         mediaView.playerText.value = 0
         mediaView.dueText.value = 0
-        recreate()
+        mediaView.min.value = ""
+        mediaView.max.value = ""
     }
     private fun pauseMedia()
     {
