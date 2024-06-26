@@ -237,11 +237,10 @@ class MainActivity : AppCompatActivity() {
         mediaView.mediaplayer = null
         handler.removeCallbacks(runnable)
         seekbar.progress = 0
-        mediaView.songName.value = ""
         mediaView.playerText.value = 0
         mediaView.dueText.value = 0
-        mediaView.min.value = ""
-        mediaView.max.value = ""
+        mediaView.min.value = "0 : 0"
+        mediaView.max.value = "0 : 0"
     }
     private fun pauseMedia()
     {
@@ -301,6 +300,10 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         mediaView.count = sp.getInt("count",0)
+        mediaView.songName.value = resources.getResourceName(song[mediaView.count].first).split("/")[1]
+        albumCover.setImageResource(song[mediaView.count].second)
+        mediaView.min.value = "0 : 0"
+        mediaView.max.value = "0 : 0"
 
         if(mediaView.mediaplayer != null)
         {
